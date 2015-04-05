@@ -54,17 +54,10 @@ module.exports = function(conf) {
                     this.handle(callback, "SEARCH_RESULTS")));
         },
 
-        add: function(files, dir, callback) {
-            if (!(files instanceof Array)) {
-                files = [files];
-            }
-
-            async.mapLimit(files, 1, function(file, callback) {
-                var id = dir + "/" + path.basename(file);
-                fs.createReadStream(file)
-                    .pipe(request.put(this.url + "images/" + id,
-                        this.handle(callback, "IMAGE_ADDED")));
-            }.bind(this), callback);
+        add: function(file, id, callback) {
+            fs.createReadStream(file)
+                .pipe(request.put(this.url + "images/" + id,
+                    this.handle(callback, "IMAGE_ADDED")));
         }
     };
 };
