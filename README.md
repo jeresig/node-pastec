@@ -3,12 +3,12 @@ node-pastec
 
 Node module for interacting with a [Pastec](http://pastec.io/) server.
 
-    var Pastec = require("pastec")({
+    var pastec = require("pastec")({
         server: "localhost:4212"
     });
 
-    Pastec.add("test.jpg", "test", function() {
-        Pastec.similar("test/test.jpg", function(err, matches) {
+    pastec.add("test.jpg", "test", function() {
+        pastec.fileSimilar("test/test.jpg", function(err, matches) {
             console.log("Similar images:");
             matches.forEach(function(item) {
                 console.log(" - ", item.filepath);
@@ -19,30 +19,32 @@ Node module for interacting with a [Pastec](http://pastec.io/) server.
 Installation
 ===
 
-    npm install matchengine
+    npm install pastec
 
 API
 ===
 
 ## add(fileName, dirName, callback)
 
-Upload an image file to MatchEngine and put it in the specified directory. For example if you were to upload:
+Upload an image file to a Pastec server and put it in the specified directory. For example if you were to upload:
 
     add("/var/data/test.jpg", "sample")
 
-You should end up with a file with an ID of: `"sample/test.jpg"` in the MatchEngine index.
+You should end up with a file with an ID of: `"sample/test.jpg"` in the Pastec index.
 
 `fileName` can also be an array of files to upload.
 
-## similar(ID, callback)
+## urlSimilar(url, callback)
 
-Return a list of objects representing other pre-uploaded files which are similar to the specified file ID. For example:
+Given the URL of an image, return a list of similar images from the database (in the same format as the `similar()` method). For example:
 
-    ME.similar("sample/test.jpg", function(err, matches) {
+    pastec.urlSimilar("http://test.com/test.jpg", function(err, matches) {
         matches.forEach(function(match) {
             console.log(match.filepath + " " + match.score + "% match.");
         });
     });
+
+The image at the specified URL is not added to the Pastec index.
 
 The object returned as a match would look something like this:
 
@@ -54,31 +56,10 @@ The object returned as a match would look something like this:
         filepath: 'sample/test2.jpg'
     }
 
-## urlSimilar(url, callback)
-
-Given the URL of an image, return a list of similar images from the database (in the same format as the `similar()` method). For example:
-
-    ME.urlSimilar("http://test.com/test.jpg", function(err, matches) {
-        matches.forEach(function(match) {
-            console.log(match.filepath + " " + match.score + "% match.");
-        });
-    });
-
-The image at the specified URL is not added to the MatchEngine index.
-
 ## del(ID, callback)
 
 Given a specified MatchEngine file ID (for example `"sample/test.jpg"`), delete that particular image from the index. It will no longer be returned in the results.
 
-## list(callback)
-
-Returns a list of all the file IDs available in the MatchEngine index. For example:
-
-    ME.list(function(err, ids) {
-        ids.forEach(function(id) {
-            console.log(id);
-        });
-    });
 
 Credits
 ===
