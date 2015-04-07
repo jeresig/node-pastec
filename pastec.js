@@ -19,7 +19,7 @@ module.exports = function(conf) {
                     return callback(err);
                 }
 
-                var data = JSON.parse(body);
+                var data = typeof body === "string" ? JSON.parse(body) : body;
 
                 if (expected && data.type !== expected) {
                     return callback(data);
@@ -58,6 +58,13 @@ module.exports = function(conf) {
             fs.createReadStream(file)
                 .pipe(request.put(this.url + "images/" + id,
                     this.handle(callback, "IMAGE_ADDED")));
+        },
+
+        saveIndex: function(indexFile, callback) {
+            request.post({
+                url: this.url + "io",
+                json: {type: "WRITE", index_path: indexFile}
+            }, this.handle(callback, "INDEX_WRITTEN"));
         }
     };
 };
