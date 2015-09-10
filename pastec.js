@@ -9,7 +9,7 @@ module.exports = function(conf) {
     return {
         url: "http://" + conf.server + "/index/",
 
-        handle: function(callback, expected) {
+        handle: function(expected, callback) {
             return function(err, res, body) {
                 if (!callback) {
                     return;
@@ -21,7 +21,8 @@ module.exports = function(conf) {
 
                 var data = typeof body === "string" ? JSON.parse(body) : body;
 
-                if (expected && data.type !== expected) {
+                // Watch for errors and un-expected results
+                if (data.type !== expected) {
                     return callback(data);
                 }
 
@@ -31,7 +32,7 @@ module.exports = function(conf) {
 
         del: function(id, callback) {
             request.del(this.url + "images/" + id,
-                 this.handle(callback, "IMAGE_REMOVED"));
+                 this.handle("IMAGE_REMOVED", callback));
         },
 
         list: function(callback) {
@@ -45,26 +46,32 @@ module.exports = function(conf) {
         fileSimilar: function(file, callback) {
             fs.createReadStream(file)
                 .pipe(request.post(this.url + "searcher",
-                    this.handle(callback, "SEARCH_RESULTS")));
+                    this.handle("SEARCH_RESULTS", callback)));
         },
 
         urlSimilar: function(url, callback) {
             request.get(url)
                 .pipe(request.post(this.url + "searcher",
-                    this.handle(callback, "SEARCH_RESULTS")));
+                    this.handle("SEARCH_RESULTS", callback)));
+        },
+
+        filterByMinScore: function(data, score) {
+            return data.map(function(item) {
+                return item.score >= score;
+            });
         },
 
         add: function(file, id, callback) {
             fs.createReadStream(file)
                 .pipe(request.put(this.url + "images/" + id,
-                    this.handle(callback, "IMAGE_ADDED")));
+                    this.handle("IMAGE_ADDED", callback)));
         },
 
         saveIndex: function(indexFile, callback) {
             request.post({
                 url: this.url + "io",
                 json: {type: "WRITE", index_path: indexFile}
-            }, this.handle(callback, "INDEX_WRITTEN"));
+            }, this.handle("INDEX_WRITTEN", callback));
         }
     };
 };
