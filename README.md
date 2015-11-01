@@ -56,15 +56,15 @@ Given the URL of an image, return an array of similar images from the database (
 
     pastec.urlSimilar("http://test.com/test.jpg", function(err, matches) {
         matches.forEach(function(match) {
-            console.log(match.filepath + " " + match.score + "% match.");
+            console.log(match.id + " " + match.score + "% match.");
         });
     });
 
 The image at the specified URL is not added to the Pastec index. The object returned as a match would look something like this:
 
     {
-        "filepath":"./3107100095036_002.jpg",
-        "rects":{"height":636,"width":421,"x":43,"y":62},
+        "id":"./3107100095036_002.jpg",
+        "rect":{"height":636,"width":421,"x":43,"y":62},
         "score":42
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "pastec",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node module for using a Pastec server.",
   "main": "pastec.js",
   "scripts": {
