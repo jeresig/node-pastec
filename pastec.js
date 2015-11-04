@@ -33,8 +33,10 @@ module.exports = function(conf) {
                 return callback(err);
             }
 
+            var imageIDs = results ? results.image_ids : [];
+
             // Turn the results into something a little more user-friendly
-            callback(err, results.image_ids.map(function(id, i) {
+            callback(err, imageIDs.map(function(id, i) {
                 return {
                     id: id,
                     rect: results.bounding_rects[i],
