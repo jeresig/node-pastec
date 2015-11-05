@@ -46,16 +46,17 @@ module.exports = function(conf) {
         };
     };
 
-    return {
-        url: "http://" + conf.server + "/index/",
+    var url = "http://" + conf.server + "/index/";
 
+    return {
         del: function(id, callback) {
-            request.del(this.url + "images/" + id,
+            request.del(url + "images/" + id,
                  handle("IMAGE_REMOVED", callback));
         },
 
         list: function(callback) {
-            // NOTE: Need implementation in Pastec
+            request.get(url + "imageIds",
+                    handle("INDEX_IMAGE_IDS", callback))
         },
 
         similar: function(id, callback) {
@@ -64,13 +65,13 @@ module.exports = function(conf) {
 
         fileSimilar: function(file, callback) {
             fs.createReadStream(file)
-                .pipe(request.post(this.url + "searcher",
+                .pipe(request.post(url + "searcher",
                     handle("SEARCH_RESULTS", processResults(callback))));
         },
 
         urlSimilar: function(url, callback) {
             request.get(url)
-                .pipe(request.post(this.url + "searcher",
+                .pipe(request.post(url + "searcher",
                     handle("SEARCH_RESULTS", processResults(callback))));
         },
 
@@ -82,13 +83,13 @@ module.exports = function(conf) {
 
         add: function(file, id, callback) {
             fs.createReadStream(file)
-                .pipe(request.put(this.url + "images/" + id,
+                .pipe(request.put(url + "images/" + id,
                     handle("IMAGE_ADDED", callback)));
         },
 
         saveIndex: function(indexFile, callback) {
             request.post({
-                url: this.url + "io",
+                url: url + "io",
                 json: {type: "WRITE", index_path: indexFile}
             }, handle("INDEX_WRITTEN", callback));
         }

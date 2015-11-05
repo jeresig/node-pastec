@@ -72,6 +72,10 @@ The image at the specified URL is not added to the Pastec index. The object retu
 
 Given a specified Pastec file ID (for example `1234`), delete that particular image from the index. It will no longer be returned in the results.
 
+## list(callback)
+
+Returns an object that holds all the IDs that are currently in the index.
+
 ## saveIndex(indexFile, callback)
 
 Save the image similarity index to the server at the specified `indexFile` location. Note that the path to the `indexFile` is to a path relative to the server, not the local environment.
