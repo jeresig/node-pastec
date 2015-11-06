@@ -3,6 +3,8 @@ var path = require("path");
 
 var request = require("request");
 
+var idCache;
+
 module.exports = function(conf) {
     conf.server = conf.server || "localhost:4212";
 
@@ -57,6 +59,34 @@ module.exports = function(conf) {
         list: function(callback) {
             request.get(url + "imageIds",
                     handle("INDEX_IMAGE_IDS", callback))
+        },
+
+        getCachedList: function(callback) {
+            if (!idCache) {
+                this.list(function(err, result) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    idCache = result.image_ids;
+                    callback(err, idCache);
+                });
+
+            } else {
+                process.nextTick(function() {
+                    callback(null, idCache);
+                });
+            }
+        },
+
+        idIndexed: function(id, callback) {
+            this.getCachedList(function(err, list) {
+                if (err) {
+                    return callback(err);
+                }
+
+                callback(err, list.indexOf(id) >= 0);
+            });
         },
 
         similar: function(id, callback) {
