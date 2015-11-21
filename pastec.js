@@ -90,7 +90,8 @@ module.exports = function(conf) {
         },
 
         similar: function(id, callback) {
-            // NOTE: Need implementation in Pastec
+            request.get(url + "images/" + id,
+                handle("SEARCH_RESULTS", processResults(callback)));
         },
 
         fileSimilar: function(file, callback) {
