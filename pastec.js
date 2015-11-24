@@ -40,7 +40,7 @@ module.exports = function(conf) {
             // Turn the results into something a little more user-friendly
             callback(err, imageIDs.map(function(id, i) {
                 return {
-                    id: id,
+                    id: id.toString(),
                     rect: results.bounding_rects[i],
                     score: results.scores[i]
                 };
@@ -53,12 +53,12 @@ module.exports = function(conf) {
     return {
         del: function(id, callback) {
             request.del(url + "images/" + id,
-                 handle("IMAGE_REMOVED", callback));
+                handle("IMAGE_REMOVED", callback));
         },
 
         list: function(callback) {
             request.get(url + "imageIds",
-                    handle("INDEX_IMAGE_IDS", callback))
+                handle("INDEX_IMAGE_IDS", callback));
         },
 
         getCachedList: function(callback) {
@@ -85,7 +85,7 @@ module.exports = function(conf) {
                     return callback(err);
                 }
 
-                callback(err, list.indexOf(id) >= 0);
+                callback(err, list.indexOf(parseFloat(id)) >= 0);
             });
         },
 
