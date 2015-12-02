@@ -11,7 +11,7 @@ Node module for interacting with a [Pastec](http://pastec.io/) server.
         pastec.fileSimilar("test.jpg", function(err, matches) {
             console.log("Similar images:");
             matches.forEach(function(item) {
-                console.log(" - ", item.filepath);
+                console.log(" - ", item.id);
             });
         });
     });
@@ -38,14 +38,14 @@ Given the path to an image file, return an array of similar images from the data
 
     pastec.fileSimilar("test.jpg", function(err, matches) {
         matches.forEach(function(match) {
-            console.log(match.filepath + " " + match.score + "% match.");
+            console.log(match.id + " " + match.score + "% match.");
         });
     });
 
 The image is not added to the Pastec index. The object returned as a match would look something like this:
 
     {
-        "filepath":"./3107100095036_002.jpg",
+        "id":"1234",
         "rects":{"height":636,"width":421,"x":43,"y":62},
         "score":42
     }
@@ -63,7 +63,7 @@ Given the URL of an image, return an array of similar images from the database (
 The image at the specified URL is not added to the Pastec index. The object returned as a match would look something like this:
 
     {
-        "id":"./3107100095036_002.jpg",
+        "id":"1234",
         "rect":{"height":636,"width":421,"x":43,"y":62},
         "score":42
     }
